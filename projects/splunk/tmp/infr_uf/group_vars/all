@@ -1,0 +1,4 @@
+---
+# "global" vars
+# I moved these thingys into each role instead.  real "server group" globals can go here
+

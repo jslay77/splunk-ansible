@@ -1,0 +1,5 @@
+---
+splunk_home: /opt/splunk/uf
+uf_git_repo: https://splunk-git.cloud.tiaa-cref.org/the-matrix/splunk-uf.git 
+uf_admin_pass: fds4Xy_36y{FfF5zk
+splunk_role: uf

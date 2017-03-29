@@ -1,0 +1,14 @@
+[utility]
+52.88.54.180
+
+[search_heads]
+
+[indexers]
+
+[infr_ds]
+52.88.54.180
+
+[uf_ds]
+52.88.54.180
+
+[ufonly:children]

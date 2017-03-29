@@ -1,0 +1,24 @@
+---
+# Initial server setup.  Calls includes where needed.
+#
+
+- name: Install Git
+  yum: name=git state=present
+
+
+- name: Install ca-cert package
+  yum: name=ca-certificates state=present
+
+- name: Update auth keys for root
+  lineinfile: dest=~root/.ssh/authorized_keys line="{{ root_pubkey }}" state=present
+
+- name: Install TIAA CA Certs for Git and such
+  copy: src=certs/tiaacacerts.pem dest=/etc/pki/ca-trust/source/anchors mode=600
+
+- name: Extract the certs
+  command: update-ca-trust extract
+  ignore_errors: true 
+
+- name: Configure OS to trust the new certs
+  command: update-ca-trust enable
+

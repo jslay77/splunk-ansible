@@ -1,0 +1,57 @@
+---
+# Install splunk 
+#
+#
+
+- name: Check for existing /opt/splunk/uf that isn't a git managed install.
+  stat: path="{{ splunk_home }}"
+  register: path
+
+- name: Stop splunk if running
+  command: "{{ splunk_home }}/bin/splunk stop"
+  ignore_errors: True
+  when: path.stat.isdir is defined
+
+- name: Remove old dir
+  file: path={{ splunk_home }} state=absent
+  when: path.stat.isdir is defined
+  become: yes
+
+- name: Checkout Latest Splunk bits from Git
+  git: repo={{ splunk_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
+  become: yes
+
+- name: Remove ftr
+  file: path={{ splunk_home }}/ftr state=absent
+  become: yes
+
+- name: Chmod and Chown shit.
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes 
+  become: yes
+
+- name: Copy web.conf for splunk 
+  template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Start splunk 
+  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt"
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Set splunk admin password
+  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme"
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Copy init script to init.d
+  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
+  become: yes
+
+- name: Generate init symlinks
+  command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
+  become: yes
+
+- name: Set init runlevels
+  command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
+  become: yes

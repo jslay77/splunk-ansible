@@ -1,0 +1,6 @@
+---
+- hosts: '{{ target }}' 
+  become: yes
+  roles:
+  - common
+  - uf

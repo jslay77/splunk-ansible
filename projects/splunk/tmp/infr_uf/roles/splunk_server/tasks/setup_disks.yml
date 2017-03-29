@@ -1,0 +1,19 @@
+---
+# lvm setup
+# base splunk mount
+#
+
+
+
+- name: Create VG for splunk
+  lvg: vg=VolGroup01 pvs={{ splunk_base_device }} state=present
+
+- name: Create the LV from the splunk VG
+  lvol: vg=VolGroup01 lv=splunk size=100%FREE state=present shrink=no
+
+- name: Create ext4 Filesystem for opt splunk
+  filesystem: fstype=ext4 dev=/dev/mapper/VolGroup01-splunk
+
+- name: Mount opt splunk
+  mount: name="{{ splunk_base }}" src=/dev/mapper/VolGroup01-splunk fstype=ext4 state=mounted
+

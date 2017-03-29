@@ -1,0 +1,13 @@
+---
+- hosts: utility
+  become: no
+
+- hosts: ufonly
+  become: no
+  roles:
+  - uf
+
+- hosts: infr_ds
+  become: no
+  roles:
+  - infr_ds

@@ -1,0 +1,33 @@
+---
+# Install the UF (opt splunk should already exist) 
+#
+#
+
+- name: Check for existing UF repo.
+  stat: path="{{ splunk_home }}/.git"
+  register: st
+  ignore_errors: True
+
+
+- include: install.yml
+  when: st.stat.isdir is not defined
+
+- name: Checkout Latest Splunk Forwarder from Git
+  git: repo={{ uf_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
+  become: true
+  register: git_result
+  changed_when: "git_result.after|default('after') != git_result.before|default('before')"
+
+- name: Remove ftr
+  file: path={{ splunk_home }}/ftr state=absent
+
+- include: upgrade.yml
+  when: git_result.changed
+
+- name: Ensure SPLUNK_OS_USER is set
+  lineinfile: dest="{{ splunk_home }}/etc/splunk-launch.conf" 
+              state=present 
+              line="SPLUNK_OS_USER={{ splunk_user }}"
+  become: true
+  become_user: "{{ splunk_user }}"
+

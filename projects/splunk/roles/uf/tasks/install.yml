@@ -1,0 +1,61 @@
+---
+# Install the UF (opt splunk should already exist) 
+#
+#
+
+- name: Check for existing /opt/splunk/uf that isn't a git managed install.
+  stat: path="{{ splunk_home }}"
+  register: uf_path
+
+- name: Stop splunk if running
+  command: "{{ splunk_home }}/bin/splunk stop"
+  ignore_errors: True
+  when: uf_path.stat.isdir is defined
+
+- name: Remove old UF dir
+  file: path={{ splunk_home }} state=absent
+  when: uf_path.stat.isdir is defined
+  become: yes
+
+- name: Checkout Latest Splunk Forwarder from Git
+  git: repo={{ uf_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
+  become: yes
+
+- name: Remove ftr
+  file: path={{ splunk_home }}/ftr state=absent
+
+- name: Chmod and Chown shit.
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes 
+  become: yes
+
+- name: Copy web.conf for splunk UF
+  template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Copy deploymentclient.conf
+  template: src=uf_deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Start splunk uf
+  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes"
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Set splunk uf admin password
+  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ uf_admin_pass }} -auth admin:changeme"
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Copy init script to init.d
+  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
+  become: yes
+
+- name: Generate init symlinks
+  command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
+  become: yes
+
+- name: Set UF init runlevels
+  command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
+  become: yes
