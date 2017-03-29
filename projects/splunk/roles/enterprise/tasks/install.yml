@@ -10,7 +10,7 @@
 - name: Stop splunk if running
   command: "{{ splunk_home }}/bin/splunk stop"
   ignore_errors: True
-  when: path.stat.isdir is defined
+  when: uf_path.stat.isdir is defined
 
 - name: Remove old dir
   file: path={{ splunk_home }} state=absent
@@ -21,16 +21,22 @@
   git: repo={{ splunk_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
   become: yes
 
-- name: Remove ftr
-  file: path={{ splunk_home }}/ftr state=absent
-  become: yes
-
 - name: Chmod and Chown shit.
   file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes 
   become: yes
 
+- name: Copy server.conf for splunk 
+  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
 - name: Copy web.conf for splunk 
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Copy deploymentclient.conf
+  template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
 

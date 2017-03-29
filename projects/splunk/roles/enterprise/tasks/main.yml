@@ -1,13 +1,12 @@
 ---
-# Install the UF (opt splunk should already exist) 
+# Install splunk 
 #
 #
 
-- name: Check for existing UF repo.
+- name: Check for existing repo.
   stat: path="{{ splunk_home }}/.git"
   register: st
   ignore_errors: True
-
 
 - include: install.yml
   when: st.stat.isdir is not defined
@@ -18,4 +17,4 @@
               line="SPLUNK_OS_USER={{ splunk_user }}"
   become: true
   become_user: "{{ splunk_user }}"
-
+ 

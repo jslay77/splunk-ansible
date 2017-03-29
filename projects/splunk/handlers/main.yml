@@ -1,0 +1,10 @@
+---
+
+- name: Restart Splunk
+  service: name="splunk-{{ splunk_role }}" state=restarted
+
+- name: Start Splunk
+  service: name="splunk-{{ splunk_role }}" state=started
+
+- name: Stop Splunk
+  service: name="splunk-{{ splunk_role }}" state=stopped

@@ -18,11 +18,8 @@
   become: yes
 
 - name: Checkout Latest Splunk Forwarder from Git
-  git: repo={{ uf_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
+  git: repo={{ splunk_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
   become: yes
-
-- name: Remove ftr
-  file: path={{ splunk_home }}/ftr state=absent
 
 - name: Chmod and Chown shit.
   file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes 
@@ -34,17 +31,17 @@
   become_user: "{{ splunk_user }}"
 
 - name: Copy deploymentclient.conf
-  template: src=uf_deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
+  template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
 
 - name: Start splunk uf
-  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes"
+  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt"
   become: yes
   become_user: "{{ splunk_user }}"
 
 - name: Set splunk uf admin password
-  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ uf_admin_pass }} -auth admin:changeme"
+  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme"
   become: yes
   become_user: "{{ splunk_user }}"
 

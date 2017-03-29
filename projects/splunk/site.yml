@@ -10,4 +10,33 @@
 - hosts: infr_ds
   become: no
   roles:
-  - infr_ds
+  - { 
+      role: enterprise,
+      ds_uri: none,
+      splunk_web_enabled: 0,
+      splunk_kvstore_disabled: 1,
+      splunk_role: infr_ds,
+      splunk_home: /opt/splunk/infr_ds,
+      splunkd_mgmt_port: 18089
+    }
+  - {
+      role: uf,
+      ds_uri: "52.88.54.180:58089",
+      splunk_web: 0,
+      splunk_role: uf,
+      splunk_home: /opt/splunk/uf,
+      splunkd_mgmt_port: 58089
+    }
+
+- hosts: uf_ds
+  become: no
+  roles:
+  - { 
+      role: enterprise,
+      splunk_web_enabled: 0,
+      splunk_kvstore_disabled: 1,
+      ds_uri: "52.88.54.180:18089",
+      splunk_role: uf_ds,
+      splunk_home: /opt/splunk/uf_ds,
+      splunkd_mgmt_port: 28089
+    }
