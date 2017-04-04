@@ -1,0 +1,17 @@
+---
+- name: Add search peers
+  command: "{{ splunk_home }}/bin/splunk add search-server https://{{ hostvars[item].ec2_private_dns_name }}:8089 -auth admin:{{ splunk_admin_pass }} -remoteUsername admin -remotePassword {{ splunk_admin_pass }}"
+  with_items:
+    - "{{ groups['indexers'] }}"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  ignore_errors: true
+  register: add_peer_results
+
+- name: Check add-peer results
+  fail:
+    msg: "Add peer failed: {{ item.stderr }}"
+  when: item.rc != 0 and item.rc != 24
+  with_items: "{{ add_peer_results.results }}"
+
+

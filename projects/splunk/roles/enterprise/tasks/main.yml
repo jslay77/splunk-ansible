@@ -6,7 +6,8 @@
 - name: Check for existing repo.
   stat: path="{{ splunk_home }}/.git"
   register: st
-  ignore_errors: True
+  ignore_errors: true
+  become: true
 
 - include: install.yml
   when: st.stat.isdir is not defined

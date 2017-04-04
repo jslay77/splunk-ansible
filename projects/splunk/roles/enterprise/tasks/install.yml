@@ -6,10 +6,13 @@
 - name: Check for existing /opt/splunk/uf that isn't a git managed install.
   stat: path="{{ splunk_home }}"
   register: path
+  become: yes
 
 - name: Stop splunk if running
   command: "{{ splunk_home }}/bin/splunk stop"
   ignore_errors: True
+  become: yes
+  become_user: "{{ splunk_user }}"
   when: uf_path.stat.isdir is defined
 
 - name: Remove old dir

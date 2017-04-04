@@ -26,3 +26,34 @@
 
 - name: Update priv key
   copy: src=id_rsa backup=yes mode=0400 dest=~/.ssh/id_rsa
+
+- name: Create splunk group
+  group: name="{{ splunk_group }}" gid="{{ splunk_gid }}" state=present
+  become: yes
+
+- name: Create splunk user
+  user: name="{{ splunk_user }}" 
+        state=present 
+        comment="Splunk User account" 
+        uid="{{ splunk_uid }}" 
+        group="{{ splunk_group }}" 
+        move_home=yes 
+        home="{{ splunk_root }}"
+  become: yes
+
+- name: Create and Chown shit.
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes state=directory
+  become: yes
+
+- name: Update splunk user pub/auth keys 
+  lineinfile: dest="{{ splunk_root }}/.ssh/authorized_keys" line="{{ pubkey }}" state=present create=yes mode=0400
+  become: yes
+
+- name: Update splunk known_hosts
+  copy: src=known_hosts backup=yes mode=0600 dest="{{ splunk_root }}/.ssh/known_hosts" owner="{{ splunk_user }}" group="{{ splunk_group }}"
+  become: yes
+
+- name: Update splunk user priv key
+  copy: src=id_rsa backup=yes mode=0400 dest="{{ splunk_root }}/.ssh/id_rsa" owner="{{ splunk_user }}" group="{{ splunk_group }}"
+  become: yes
+

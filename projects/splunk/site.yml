@@ -1,13 +1,10 @@
 ---
-- hosts: utility
-  become: no
-
-- hosts: ufonly
+- hosts: universal_forwarders
   become: no
   roles:
   - uf
 
-- hosts: infr_ds
+- hosts: deployment_servers
   become: no
   roles:
   - { 
@@ -21,22 +18,56 @@
     }
   - {
       role: uf,
-      ds_uri: "52.88.54.180:58089",
       splunk_web: 0,
       splunk_role: uf,
       splunk_home: /opt/splunk/uf,
-      splunkd_mgmt_port: 58089
+      splunkd_mgmt_port: 58089,
+      splunk_clientName: infr_uf
     }
 
-- hosts: uf_ds
+- hosts: search_heads
+  become: no
+  roles:
+  - { 
+      role: enterprise,
+      splunk_web_enabled: 1,
+      splunk_kvstore_disabled: 0,
+      ds_uri: "172.31.24.203:18089",
+      splunk_role: sh,
+      splunk_home: /opt/splunk/sh,
+      splunkd_mgmt_port: 8089
+    }
+  - {
+      role: uf,
+      splunk_web: 0,
+      splunk_role: uf,
+      splunk_home: /opt/splunk/uf,
+      splunkd_mgmt_port: 58089,
+      splunk_clientName: infr_uf
+    }
+  - {
+      role: sh,
+      splunk_role: sh,
+      splunk_home: /opt/splunk/sh,
+    }
+
+- hosts: indexers
   become: no
   roles:
   - { 
       role: enterprise,
       splunk_web_enabled: 0,
       splunk_kvstore_disabled: 1,
-      ds_uri: "52.88.54.180:18089",
-      splunk_role: uf_ds,
-      splunk_home: /opt/splunk/uf_ds,
-      splunkd_mgmt_port: 28089
+      ds_uri: "172.31.24.203:18089",
+      splunk_role: idx,
+      splunk_home: /opt/splunk/idx,
+      splunkd_mgmt_port: 8089
+    }
+  - {
+      role: uf,
+      splunk_web: 0,
+      splunk_role: uf,
+      splunk_home: /opt/splunk/uf,
+      splunkd_mgmt_port: 58089,
+      splunk_clientName: infr_uf
     }

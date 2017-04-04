@@ -7,6 +7,7 @@
   stat: path="{{ splunk_home }}/.git"
   register: st
   ignore_errors: True
+  become: true
 
 
 - include: install.yml
@@ -15,7 +16,32 @@
 - name: Ensure SPLUNK_OS_USER is set
   lineinfile: dest="{{ splunk_home }}/etc/splunk-launch.conf" 
               state=present 
+              regexp="^SPLUNK_OS_USER="
               line="SPLUNK_OS_USER={{ splunk_user }}"
   become: true
+  register: osuser
   become_user: "{{ splunk_user }}"
+
+- name: Chmod and Chown shit.
+  file: dest={{ splunk_home }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes state=directory
+  register: perms
+  become: yes
+
+- name: Copy web.conf for splunk UF
+  template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: webconf
+
+- name: Copy deploymentclient.conf
+  template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: depconf
+
+- name: Restart splunk 
+  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
+  become: yes
+  when: (depconf.changed or webconf.changed or osuser.changed)
+
 
