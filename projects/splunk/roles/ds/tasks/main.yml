@@ -1,0 +1,28 @@
+---
+- name: Create app structure for deployment-apps.
+  file: dest="{{ splunk_home }}/etc/deployment-apps/jks_outputs/local" mode=750 state=directory recurse=yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Add outputs.conf
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/deployment-apps/jks_outputs/local/outputs.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: outputs
+
+- name: Add serverclasses
+  unarchive: src=apps.tgz dest="{{ splunk_home }}/etc/apps/"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: sc
+
+- name: Add deployment-apps
+  unarchive: src=deployment-apps.tgz dest="{{ splunk_home }}/etc/deployment-apps"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: da
+
+- name: Restart Splunk
+  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
+  become: yes
+  when: (outputs.changed or da.changed or sc.changed)

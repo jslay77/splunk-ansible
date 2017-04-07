@@ -1,0 +1,33 @@
+---
+# Install splunk 
+#
+#
+- name: Copy server.conf for splunk 
+  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: server_conf
+
+- name: Add master-apps
+  unarchive: src=master-apps.tgz dest="{{ splunk_home }}/etc/master-apps"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: ma
+
+- name: Deploy bundle to cluster peers
+  command: "{{ splunk_home }}/bin/splunk apply cluster-bundle --answer-yes -auth {{ splunk_user }}:{{ splunk_admin_pass }}"
+  become: yes
+  become_user: "{{ splunk_user }}"
+
+- name: Add outputs.conf
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=660
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: outputs
+
+- name: Restart splunk 
+  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
+  become: yes
+  when: server_conf.changed
+
+

@@ -1,0 +1,11 @@
+---
+- name: Copy server.conf for splunk 
+  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: server_conf
+
+- name: Restart splunk 
+  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
+  become: yes
+  when: server_conf.changed
