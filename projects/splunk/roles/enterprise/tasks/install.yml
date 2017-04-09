@@ -3,7 +3,7 @@
 #
 #
 
-- name: Check for existing /opt/splunk/uf that isn't a git managed install.
+- name: Check for existing splunk_home"
   stat: path="{{ splunk_home }}"
   register: path
   become: yes
@@ -13,7 +13,7 @@
   ignore_errors: True
   become: yes
   become_user: "{{ splunk_user }}"
-  when: uf_path.stat.isdir is defined
+  when: path.stat.isdir is defined
 
 - name: Remove old dir
   file: path={{ splunk_home }} state=absent
@@ -35,11 +35,6 @@
 
 - name: Copy web.conf for splunk 
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
-  become: yes
-  become_user: "{{ splunk_user }}"
-
-- name: Copy deploymentclient.conf
-  template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
 

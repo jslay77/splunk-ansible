@@ -1,6 +1,5 @@
 ---
 # splunk default vars
-infr_ds_uri: 172.31.24.203:18089
 splunk_role: sh
 splunk_web: 0
 splunk_kvstore: 1

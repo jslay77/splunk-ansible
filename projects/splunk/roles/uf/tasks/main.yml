@@ -22,11 +22,6 @@
   register: osuser
   become_user: "{{ splunk_user }}"
 
-- name: Chmod and Chown shit.
-  file: dest={{ splunk_home }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes state=directory
-  register: perms
-  become: yes
-
 - name: Copy web.conf for splunk UF
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
   become: yes

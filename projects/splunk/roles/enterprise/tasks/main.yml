@@ -3,8 +3,8 @@
 #
 #
 
-- name: Check for existing repo.
-  stat: path="{{ splunk_home }}/.git"
+- name: Check for existing splunk root dir.
+  stat: path="{{ splunk_root }}"
   register: st
   ignore_errors: true
   become: true
@@ -19,3 +19,7 @@
   become: true
   become_user: "{{ splunk_user }}"
  
+- name: Chmod and Chown shit.
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes
+  become: yes
+

@@ -1,4 +1,12 @@
 ---
+- hosts: all
+  gather_facts: False
+  
+  tasks:
+  - name: install python 2
+    raw: test -e /usr/bin/python || (apt -y update && apt install -y python-minimal)
+    become: yes
+
 - hosts: universal_forwarders
   become: no
   roles:
@@ -7,67 +15,20 @@
 - hosts: deployment_servers
   become: no
   roles:
-  - { 
-      role: enterprise,
-      ds_uri: none,
-      splunk_web_enabled: 0,
-      splunk_kvstore_disabled: 1,
-      splunk_role: infr_ds,
-      splunk_home: /opt/splunk/infr_ds,
-      splunkd_mgmt_port: 18089
-    }
-  - {
-      role: uf,
-      splunk_web: 0,
-      splunk_role: uf,
-      splunk_home: /opt/splunk/uf,
-      splunkd_mgmt_port: 58089,
-      splunk_clientName: infr_uf
-    }
+  - ds
+
+- hosts: cluster_master
+  become: no
+  roles:
+  - cm
 
 - hosts: search_heads
   become: no
   roles:
-  - { 
-      role: enterprise,
-      splunk_web_enabled: 1,
-      splunk_kvstore_disabled: 0,
-      ds_uri: "172.31.24.203:18089",
-      splunk_role: sh,
-      splunk_home: /opt/splunk/sh,
-      splunkd_mgmt_port: 8089
-    }
-  - {
-      role: uf,
-      splunk_web: 0,
-      splunk_role: uf,
-      splunk_home: /opt/splunk/uf,
-      splunkd_mgmt_port: 58089,
-      splunk_clientName: infr_uf
-    }
-  - {
-      role: sh,
-      splunk_role: sh,
-      splunk_home: /opt/splunk/sh,
-    }
+  - sh
 
 - hosts: indexers
   become: no
   roles:
-  - { 
-      role: enterprise,
-      splunk_web_enabled: 0,
-      splunk_kvstore_disabled: 1,
-      ds_uri: "172.31.24.203:18089",
-      splunk_role: idx,
-      splunk_home: /opt/splunk/idx,
-      splunkd_mgmt_port: 8089
-    }
-  - {
-      role: uf,
-      splunk_web: 0,
-      splunk_role: uf,
-      splunk_home: /opt/splunk/uf,
-      splunkd_mgmt_port: 58089,
-      splunk_clientName: infr_uf
-    }
+  - idx
+
