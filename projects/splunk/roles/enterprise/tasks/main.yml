@@ -23,3 +23,56 @@
   file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes
   become: yes
 
+- name: Disable THP (tuned)
+  service: name=tuned enabled=no state=stopped
+  become: yes
+  ignore_errors: true
+ 
+- name: Disable THP (ktune)
+  service: name=ktune enabled=no state=stopped
+  become: yes
+  ignore_errors: true
+ 
+- name: Disable THP (Boot time script)
+  become: yes
+  blockinfile:
+    path: /etc/rc.d/rc.local
+    backup: yes
+    marker: "# {mark} ANSIBLE MANAGED BLOCK #"
+    block: |
+      case $1 in
+        start)
+          if [ -d /sys/kernel/mm/transparent_hugepage ]; then
+            thp_path=/sys/kernel/mm/transparent_hugepage
+          elif [ -d /sys/kernel/mm/redhat_transparent_hugepage ]; then
+            thp_path=/sys/kernel/mm/redhat_transparent_hugepage
+          else
+            return 0
+          fi
+ 
+          echo 'never' > ${thp_path}/enabled
+          echo 'never' > ${thp_path}/defrag
+ 
+          re='^[0-1]+$'
+          if [[ $(cat ${thp_path}/khugepaged/defrag) =~ $re ]]
+          then
+            # RHEL 7
+            echo 0  > ${thp_path}/khugepaged/defrag
+          else
+            # RHEL 6
+            echo 'no' > ${thp_path}/khugepaged/defrag
+          fi
+ 
+          unset re
+          unset thp_path
+          ;;
+      esac
+
+- name: Ensure rc.local is executable
+  file: mode=0740 dest="/etc/rc.d/rc.local" state=file
+  become: yes
+ 
+- name: Enable rc-local in systemd
+  service: name=rc-local state=started enabled=yes
+  become: yes
+

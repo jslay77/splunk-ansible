@@ -47,5 +47,5 @@
 - name: Restart splunk 
   service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
   become: yes
-  when: (server_conf.changed or init.changed or web_conf.changed)
+  when: (outputs.changed or server_conf.changed or init.changed or web_conf.changed)
 

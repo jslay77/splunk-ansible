@@ -1,14 +1,4 @@
 ---
-- hosts: utility
-  become: no
-  roles:
-  - common
-
-- hosts: universal_forwarders
-  become: no
-  roles:
-  - uf
-
 - hosts: deployment_servers
   become: no
   roles:
@@ -28,4 +18,15 @@
   become: no
   roles:
   - idx
+
+- hosts: utility
+  become: no
+  roles:
+  - common
+
+- hosts: universal_forwarders
+  become: no
+  roles:
+  - uf
+
 

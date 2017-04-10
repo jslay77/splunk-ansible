@@ -11,6 +11,18 @@
   become_user: "{{ splunk_user }}"
   register: web_conf
 
+- name: Copy outputs.conf for splunk 
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: outputs_conf
+
+- name: Copy limits.conf for splunk 
+  copy: src=limits.conf dest="{{ splunk_home }}/etc/system/local/limits.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: limits_conf
+
 - name: Copy init script to init.d
   template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
   become: yes
@@ -27,4 +39,4 @@
 - name: Restart splunk 
   service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
   become: yes
-  when: (server_conf.changed or init.changed or web_conf.changed)
+  when: (limits_conf.changed or outputs_conf.changed or server_conf.changed or init.changed or web_conf.changed)

@@ -22,6 +22,12 @@
   become_user: "{{ splunk_user }}"
   register: da
 
+- name: Copy outputs.conf for splunk
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: outputs_conf
+
 - name: Copy server.conf for splunk 
   template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
   become: yes
@@ -50,5 +56,5 @@
 - name: Restart splunk 
   service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
   become: yes
-  when: (server_conf.changed or init.changed or web_conf.changed or outputs.changed or sc.changed)
+  when: (outputs_conf.changed or server_conf.changed or init.changed or web_conf.changed or outputs.changed or sc.changed)
 

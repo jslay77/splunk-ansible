@@ -14,19 +14,16 @@
   lineinfile: dest=~/.ssh/authorized_keys line="{{ pubkey }}" state=present create=yes mode=0400
   become: yes
 
+- name: Update known_hosts
+  copy: src=known_hosts backup=yes mode=0600 dest=~/.ssh/known_hosts
+  become: yes
+
 - name: Update root priv key
   copy: src=id_rsa backup=yes mode=0400 dest=~/.ssh/id_rsa
   become: yes
 
-- name: Update root known_hosts
-  copy: src=known_hosts backup=yes mode=0400 dest=~/.ssh/known_hosts
-  become: yes
-
 - name: Update pub/auth keys 
   lineinfile: dest=~/.ssh/authorized_keys line="{{ pubkey }}" state=present create=yes mode=0400
-
-- name: Update known_hosts
-  copy: src=known_hosts backup=yes mode=0400 dest=~/.ssh/known_hosts
 
 - name: Update priv key
   copy: src=id_rsa backup=yes mode=0400 dest=~/.ssh/id_rsa
@@ -53,11 +50,10 @@
   lineinfile: dest="{{ splunk_root }}/.ssh/authorized_keys" line="{{ pubkey }}" state=present create=yes mode=0400
   become: yes
 
-- name: Update splunk known_hosts
-  copy: src=known_hosts backup=yes mode=0600 dest="{{ splunk_root }}/.ssh/known_hosts" owner="{{ splunk_user }}" group="{{ splunk_group }}"
-  become: yes
-
 - name: Update splunk user priv key
   copy: src=id_rsa backup=yes mode=0400 dest="{{ splunk_root }}/.ssh/id_rsa" owner="{{ splunk_user }}" group="{{ splunk_group }}"
   become: yes
 
+- name: Update known_hosts for splunk account
+  copy: src=known_hosts backup=yes mode=0600 dest="{{ splunk_root }}/.ssh/known_hosts" owner="{{ splunk_user }}" group="{{ splunk_group }}"
+  become: yes
