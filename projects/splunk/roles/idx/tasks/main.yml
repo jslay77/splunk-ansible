@@ -24,12 +24,6 @@
   command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
   become: yes
 
-- name: Set as license slave
-  command: "{{ splunk_home }}/bin/splunk edit licenser-localslave -master_uri '{{ splunk_lm_uri }}' -auth admin:{{ splunk_admin_pass }}"
-  become: yes
-  become_user: "{{ splunk_user }}"
-  ignore_errors: true
-
 - name: Restart splunk 
   service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
   become: yes

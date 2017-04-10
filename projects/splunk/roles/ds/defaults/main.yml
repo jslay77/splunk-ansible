@@ -1,8 +1,8 @@
 ---
 # splunk default vars
 splunk_role: ds
-splunk_web: 0
-splunk_kvstore: 1
+splunk_web_enabled: 0
+splunk_kvstore_disabled: 1
 splunk_home: /opt/splunk/ds
 splunk_root: /opt/splunk
 splunkd_mgmt_port: 8089

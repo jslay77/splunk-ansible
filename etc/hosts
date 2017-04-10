@@ -8,8 +8,9 @@
 
 [tag_splunk_uf_1]
 
-[utility]
-52.88.54.180
+[tag_utility_1]
+
+[utility:children]
 
 [cluster_master:children]
 tag_splunk_cm_1

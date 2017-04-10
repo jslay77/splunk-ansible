@@ -33,6 +33,11 @@
   become: yes
   become_user: "{{ splunk_user }}"
 
+- name: Copy server.conf for splunk UF
+  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+
 - name: Copy deploymentclient.conf
   template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes

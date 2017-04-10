@@ -28,6 +28,12 @@
   become_user: "{{ splunk_user }}"
   register: webconf
 
+- name: Copy server.conf for splunk UF
+  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: serverconf
+
 - name: Copy deploymentclient.conf
   template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes
@@ -37,6 +43,6 @@
 - name: Restart splunk 
   service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
   become: yes
-  when: (depconf.changed or webconf.changed or osuser.changed)
+  when: (depconf.changed or serverconf.changed or webconf.changed or osuser.changed)
 
 

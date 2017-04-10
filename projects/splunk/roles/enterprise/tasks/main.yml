@@ -3,8 +3,8 @@
 #
 #
 
-- name: Check for existing splunk root dir.
-  stat: path="{{ splunk_root }}"
+- name: Check for existing splunk home
+  stat: path="{{ splunk_home }}"
   register: st
   ignore_errors: true
   become: true

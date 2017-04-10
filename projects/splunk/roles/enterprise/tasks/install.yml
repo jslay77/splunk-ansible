@@ -3,7 +3,7 @@
 #
 #
 
-- name: Check for existing splunk_home"
+- name: Check for existing splunk home"
   stat: path="{{ splunk_home }}"
   register: path
   become: yes

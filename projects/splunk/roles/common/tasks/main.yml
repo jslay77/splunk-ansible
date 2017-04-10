@@ -3,7 +3,11 @@
 #
 
 - name: Install Git
-  yum: name=git state=present
+  yum: name=git state=latest
+  become: yes
+  
+- name: Install sysstat (rhel 7...sigh)
+  yum: name=sysstat state=latest
   become: yes
   
 - name: Update root pub/auth keys 
