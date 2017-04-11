@@ -43,16 +43,6 @@
   become: yes
   become_user: "{{ splunk_user }}"
 
-- name: Start splunk uf
-  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt"
-  become: yes
-  become_user: "{{ splunk_user }}"
-
-- name: Set splunk uf admin password
-  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme"
-  become: yes
-  become_user: "{{ splunk_user }}"
-
 - name: Copy init script to init.d
   template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
   become: yes
@@ -64,3 +54,13 @@
 - name: Set UF init runlevels
   command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
   become: yes
+
+- name: Start Splunk
+  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
+  become: yes
+
+- name: Set splunk uf admin password
+  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme"
+  become: yes
+  become_user: "{{ splunk_user }}"
+

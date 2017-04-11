@@ -37,11 +37,8 @@
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-
-- name: Start splunk 
-  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt"
-  become: yes
-  become_user: "{{ splunk_user }}"
+  notify:
+    - Start Splunk FTR
 
 - name: Set splunk admin password
   command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme"

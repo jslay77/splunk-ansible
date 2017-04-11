@@ -16,7 +16,7 @@ ulimit -n 10240
 
 splunk_start() {
   echo Starting Splunk...
-  "{{ splunk_home }}/bin/splunk" start --no-prompt --answer-yes
+  "{{ splunk_home }}/bin/splunk" start --no-prompt --answer-yes --accept-license
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch /var/lock/subsys/splunk-{{ splunk_role }}
 }

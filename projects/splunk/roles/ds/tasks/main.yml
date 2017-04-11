@@ -8,42 +8,47 @@
   template: src=outputs.conf dest="{{ splunk_home }}/etc/deployment-apps/jks_outputs/local/outputs.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: outputs
+  notify:
+    - Restart Splunk
 
 - name: Add serverclasses
   unarchive: src=apps.tgz dest="{{ splunk_home }}/etc/apps/"
   become: yes
   become_user: "{{ splunk_user }}"
-  register: sc
+  notify:
+    - Restart Splunk
 
 - name: Add deployment-apps
   unarchive: src=deployment-apps.tgz dest="{{ splunk_home }}/etc/deployment-apps"
   become: yes
   become_user: "{{ splunk_user }}"
-  register: da
+  notify:
+    - Restart Splunk
 
 - name: Copy outputs.conf for splunk
   template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: outputs_conf
+  notify:
+    - Restart Splunk
 
 - name: Copy server.conf for splunk 
   template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: server_conf
+  notify:
+    - Restart Splunk
 
 - name: Copy web.conf for splunk 
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: web_conf
+  notify:
+    - Restart Splunk
 
 - name: Copy init script to init.d
   template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
   become: yes
-  register: init
 
 - name: Generate init symlinks
   command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
@@ -52,9 +57,4 @@
 - name: Set init runlevels
   command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
   become: yes
-
-- name: Restart splunk 
-  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
-  become: yes
-  when: (outputs_conf.changed or server_conf.changed or init.changed or web_conf.changed or outputs.changed or sc.changed)
 

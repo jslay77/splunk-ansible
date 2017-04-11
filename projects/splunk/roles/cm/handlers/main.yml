@@ -1,7 +1,7 @@
 ---
 
 - name: Restart Splunk
-  service: name="splunk-{{ splunk_role }}" state=restarted
+  command: "/etc/init.d/splunk-{{ splunk_role }} restart"
   become: yes
 
 - name: Start Splunk

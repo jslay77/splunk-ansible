@@ -8,6 +8,8 @@
 
 [tag_splunk_uf_1]
 
+[tag_splunk_ufonly_1]
+
 [tag_utility_1]
 
 [utility:children]
@@ -27,5 +29,6 @@ tag_splunk_ds_1
 [universal_forwarders:children]
 tag_splunk_uf_1
 
-
+[clients:children]
+tag_splunk_ufonly_1
 

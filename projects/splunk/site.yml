@@ -9,15 +9,15 @@
   roles:
   - cm
 
-- hosts: search_heads
-  become: no
-  roles:
-  - sh
-
 - hosts: indexers
   become: no
   roles:
   - idx
+
+- hosts: search_heads
+  become: no
+  roles:
+  - sh
 
 - hosts: utility
   become: no
@@ -25,6 +25,11 @@
   - common
 
 - hosts: universal_forwarders
+  become: no
+  roles:
+  - uf
+
+- hosts: clients
   become: no
   roles:
   - uf

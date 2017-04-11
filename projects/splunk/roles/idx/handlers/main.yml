@@ -1,0 +1,18 @@
+---
+
+- name: Restart Splunk
+  command: "/etc/init.d/splunk-{{ splunk_role }} restart"
+  become: yes
+
+- name: Start Splunk
+  service: name="splunk-{{ splunk_role }}" state=started
+  become: yes
+
+- name: Stop Splunk
+  service: name="splunk-{{ splunk_role }}" state=stopped
+  become: yes
+
+- name: Start Splunk FTR
+  command: "{{ splunk_home }}/bin/splunk start --accept-license --answer-yes --no-prompt"
+  become: yes
+  become_user: "{{ splunk_user }}"

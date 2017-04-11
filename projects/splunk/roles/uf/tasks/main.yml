@@ -9,9 +9,18 @@
   ignore_errors: True
   become: true
 
+- name: Check if Splunk exists, but was never properly started (FTR still exists)
+  stat: path="{{ splunk_home }}/ftr"
+  register: ftr
+  ignore_errors: True
+  become: true
 
 - include: install.yml
-  when: st.stat.isdir is not defined
+  when: ( st.stat.isdir is not defined or ftr.stat.islnk is defined )
+
+- name: Ensure Splunk is started
+  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
+  become: yes
 
 - name: Ensure SPLUNK_OS_USER is set
   lineinfile: dest="{{ splunk_home }}/etc/splunk-launch.conf" 
@@ -21,28 +30,29 @@
   become: true
   register: osuser
   become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
 
 - name: Copy web.conf for splunk UF
   template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: webconf
+  notify:
+    - Restart Splunk
 
 - name: Copy server.conf for splunk UF
   template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: serverconf
+  notify:
+    - Restart Splunk
 
 - name: Copy deploymentclient.conf
   template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
   become: yes
   become_user: "{{ splunk_user }}"
-  register: depconf
+  notify:
+    - Restart Splunk
 
-- name: Restart splunk 
-  service: name="splunk-{{ splunk_role }}" state=restarted enabled=yes 
-  become: yes
-  when: (depconf.changed or serverconf.changed or webconf.changed or osuser.changed)
 
 
