@@ -9,8 +9,18 @@
   ignore_errors: true
   become: true
 
+- name: Check if Splunk exists, but was never properly started (FTR still exists)
+  stat: path="{{ splunk_home }}/ftr"
+  register: ftr
+  ignore_errors: True
+  become: true
+
 - include: install.yml
-  when: st.stat.isdir is not defined
+  when: ( st.stat.isdir is not defined or ftr.stat.islnk is defined )
+
+- name: Chmod and Chown shit.
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} 
+  become: yes
 
 - name: Ensure SPLUNK_OS_USER is set
   lineinfile: dest="{{ splunk_home }}/etc/splunk-launch.conf" 
@@ -19,8 +29,8 @@
   become: true
   become_user: "{{ splunk_user }}"
  
-- name: Chmod and Chown shit.
-  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} recurse=yes
+- name: Ensure Splunk is started
+  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
   become: yes
 
 - name: Disable THP (tuned)

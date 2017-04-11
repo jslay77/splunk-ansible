@@ -33,22 +33,53 @@
   notify:
     - Restart Splunk
 
-- name: Copy web.conf for splunk UF
-  template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+- name: Set web.conf configs
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/web.conf" 
+    mode: 0650
+    section: settings
+    option: mgmtHostPort
+    value: "0:{{splunkd_mgmt_port}}"
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
-- name: Copy server.conf for splunk UF
-  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+- name: Set server.conf configs
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: general
+    option: serverName
+    value: "{{ splunk_role }}-{{ inventory_hostname }}"
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
-- name: Copy deploymentclient.conf
-  template: src=deploymentclient.conf dest="{{ splunk_home }}/etc/system/local/deploymentclient.conf" mode=650
+- name: Set Deployment Client Configs (1)
+  ini_file: 
+    path: "{{ splunk_home }}/etc/system/local/deploymentclient.conf"
+    section: deployment-client
+    option: clientName
+    value: "{{ splunk_clientName }}"
+    mode: 0650
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set Deployment Client Configs (2)
+  ini_file: 
+    path: "{{ splunk_home }}/etc/system/local/deploymentclient.conf"
+    section: "target-broker:deploymentServer"
+    option: targetUri
+    value: "{{ ds_uri }}"
+    mode: 0650
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
