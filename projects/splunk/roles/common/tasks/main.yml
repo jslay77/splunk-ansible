@@ -2,12 +2,13 @@
 # Initial server setup.  Calls includes where needed.
 #
 
-- name: Install Git
-  yum: name=git state=latest
-  become: yes
-  
-- name: Install sysstat (rhel 7...sigh)
-  yum: name=sysstat state=latest
+- name: Install some pre-req packages
+  yum: 
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - git
+    - sysstat
   become: yes
   
 - name: Update root pub/auth keys 

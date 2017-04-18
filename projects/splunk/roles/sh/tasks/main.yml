@@ -1,13 +1,116 @@
 ---
-- name: Copy server.conf for splunk 
-  template: src=server.conf dest="{{ splunk_home }}/etc/system/local/server.conf" mode=650
+- name: Set web.conf configs (settings.startwebserver)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/web.conf" 
+    mode: 0650
+    section: settings
+    option: startwebserver
+    value: "0:{{splunk_web_enabled}}
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
-- name: Copy web.conf for splunk 
-  template: src=web.conf dest="{{ splunk_home }}/etc/system/local/web.conf" mode=650
+- name: Set web.conf configs (settings.mgmtHostPort) 
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/web.conf" 
+    mode: 0650
+    section: settings
+    option: mgmtHostPort
+    value: "0:{{splunkd_mgmt_port}}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (general.serverName)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: general
+    option: serverName
+    value: "{{ splunk_role }}-{{ inventory_hostname }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (kvstore.disabled)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: kvstore
+    option: disabled
+    value: "{{ splunk_kvstore_disabled }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.pass4SymmKey)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: pass4SymmKey
+    value: "{{ splunk_cluster_key }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.mode)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: mode
+    value: "{{ splunk_cluster_mode }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.cluster_label)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: cluster_label
+    value: "{{ splunk_cluster_label }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.master_uri)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: master_uri
+    value: "{{ splunk_cm_uri }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (general.serverName)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: general
+    option: serverName
+    value: "{{ splunk_role }}-{{ inventory_hostname }}"
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
