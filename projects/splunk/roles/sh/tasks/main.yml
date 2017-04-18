@@ -5,7 +5,7 @@
     mode: 0650
     section: settings
     option: startwebserver
-    value: "0:{{splunk_web_enabled}}
+    value: "0:{{splunk_web_enabled}}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
