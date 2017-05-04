@@ -1,4 +1,8 @@
 ---
+- hosts: all
+  vars:
+    upgrade: 0
+
 - hosts: deployment_servers
   become: no
   roles:
@@ -13,6 +17,7 @@
   become: no
   roles:
   - idx
+  - idx_cluster_member
 
 - hosts: search_heads
   become: no

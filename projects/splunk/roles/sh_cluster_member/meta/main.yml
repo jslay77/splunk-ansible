@@ -1,0 +1,8 @@
+---
+dependencies:
+  - { role: enterprise, 
+      splunk_home: /opt/splunk/sh,
+      splunk_web_enabled: 1,
+      splunk_kvstore_disabled: 0,
+      splunk_role: sh
+     }

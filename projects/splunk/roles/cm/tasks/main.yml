@@ -94,7 +94,7 @@
     - Restart Splunk
 
 - name: Add master-apps
-  unarchive: src=master-apps.tgz dest="{{ splunk_home }}/etc/master-apps"
+  unarchive: src=master-apps.tgz dest="{{ splunk_home }}/etc"
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
