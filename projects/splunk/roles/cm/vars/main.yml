@@ -16,4 +16,5 @@ splunk_cluster_label: jkscluster
 splunk_sf: 2
 splunk_rf: 2
 splunk_cluster_mode: master
-splunk_lm_uri: https://172.31.17.154:8089
+splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
+
