@@ -1,5 +1,5 @@
 ---
-# splunk default vars
+# splunk idx vars
 splunk_home: /opt/splunk/idx
 splunk_user: splunk
 splunk_group: splunk

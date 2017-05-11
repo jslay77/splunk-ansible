@@ -101,7 +101,7 @@
     - Restart Splunk
 
 - name: Deploy bundle to cluster peers
-  command: "{{ splunk_home }}/bin/splunk apply cluster-bundle --answer-yes -auth {{ splunk_user }}:{{ splunk_admin_pass }}"
+  command: "{{ splunk_home }}/bin/splunk apply cluster-bundle --answer-yes -auth admin:{{ splunk_admin_pass }}"
   become: yes
   become_user: "{{ splunk_user }}"
 
@@ -115,12 +115,21 @@
 - name: Copy init script to init.d
   template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
   become: yes
+  changed_when: false
 
 - name: Generate init symlinks
   command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
   become: yes
+  changed_when: false
 
 - name: Set init runlevels
   command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
   become: yes
+  changed_when: false
 
+- name: re-read facts after adding custom fact
+  setup: filter=ansible_local
+  become: yes
+
+- include: upgrade-{{splunk_role}}.yml
+  when: ( splunk_version > ansible_local.splunk.cm.version )

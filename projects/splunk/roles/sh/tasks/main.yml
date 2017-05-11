@@ -2,7 +2,6 @@
 - name: Set web.conf configs (settings.startwebserver)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
     section: settings
     option: startwebserver
     value: "0:{{splunk_web_enabled}}"
@@ -15,7 +14,6 @@
 - name: Set web.conf configs (settings.mgmtHostPort) 
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
     section: settings
     option: mgmtHostPort
     value: "0:{{splunkd_mgmt_port}}"
@@ -28,7 +26,6 @@
 - name: Set server.conf configs (general.serverName)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: general
     option: serverName
     value: "{{ splunk_role }}-{{ inventory_hostname }}"
@@ -41,7 +38,6 @@
 - name: Set server.conf configs (kvstore.disabled)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: kvstore
     option: disabled
     value: "{{ splunk_kvstore_disabled }}"
@@ -51,93 +47,37 @@
   notify:
     - Restart Splunk
 
-- name: Set server.conf configs (clustering.pass4SymmKey)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: clustering
-    option: pass4SymmKey
-    value: "{{ splunk_cluster_key }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set server.conf configs (clustering.mode)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: clustering
-    option: mode
-    value: "{{ splunk_cluster_mode }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set server.conf configs (clustering.cluster_label)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: clustering
-    option: cluster_label
-    value: "{{ splunk_cluster_label }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set server.conf configs (clustering.master_uri)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: clustering
-    option: master_uri
-    value: "{{ splunk_cm_uri }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set server.conf configs (general.serverName)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: general
-    option: serverName
-    value: "{{ splunk_role }}-{{ inventory_hostname }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
 - name: Copy outputs.conf for splunk 
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=650
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" 
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
 - name: Copy limits.conf for splunk 
-  copy: src=limits.conf dest="{{ splunk_home }}/etc/system/local/limits.conf" mode=650
+  copy: src=limits.conf dest="{{ splunk_home }}/etc/system/local/limits.conf" 
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
 - name: Copy init script to init.d
-  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
+  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=755
   become: yes
 
 - name: Generate init symlinks
   command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
+  changed_when: False
   become: yes
 
-- name: Set init runlevels
-  command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
+- name: Enable splunk
+  service: name=splunk-{{ splunk_role }} enabled=yes
+  become: yes
+
+- name: re-read facts after adding custom fact
+  setup: filter=ansible_local
+  become: yes
+
+- include: upgrade.yml-{{splunk_role}}
+  when: ( splunk_version > ansible_local.splunk.sh.version )
   become: yes

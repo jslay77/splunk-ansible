@@ -2,7 +2,6 @@
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: clustering
     option: pass4SymmKey
     value: "{{ splunk_cluster_key }}"
@@ -15,7 +14,6 @@
 - name: Set server.conf configs (clustering.mode)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: clustering
     option: mode
     value: "{{ splunk_cluster_mode }}"
@@ -28,7 +26,6 @@
 - name: Set server.conf configs (clustering.cluster_label)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: clustering
     option: cluster_label
     value: "{{ splunk_cluster_label }}"
@@ -41,7 +38,6 @@
 - name: Set server.conf configs (clustering.master_uri)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: clustering
     option: master_uri
     value: "{{ splunk_cm_uri }}"
@@ -54,8 +50,9 @@
 - name: Set server.conf configs ([replication_port://9887])
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: replication_port://9887
+    option: disabled
+    value: false
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"

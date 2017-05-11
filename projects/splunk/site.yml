@@ -1,7 +1,8 @@
 ---
 - hosts: all
-  vars:
-    upgrade: 0
+  become: yes
+  roles:
+    - common
 
 - hosts: deployment_servers
   become: no
@@ -23,11 +24,7 @@
   become: no
   roles:
   - sh
-
-- hosts: utility
-  become: no
-  roles:
-  - common
+  - idx_cluster_member
 
 - hosts: universal_forwarders
   become: no

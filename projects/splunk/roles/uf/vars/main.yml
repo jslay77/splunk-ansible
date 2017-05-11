@@ -1,6 +1,7 @@
 ---
 # UF vars
-ds_uri: ip-172-31-10-234.ec2.internal:8089
+splunk_version: 6.6.0
+ds_uri: ip-172-31-7-21.ec2.internal:8089
 splunk_role: uf
 splunk_home: /opt/splunk/uf
 splunk_root: /opt/splunk

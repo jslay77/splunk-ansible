@@ -2,10 +2,9 @@
 - name: Set web.conf configs (settings.startwebserver)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
     section: settings
     option: startwebserver
-    value: "0:{{splunk_web_enabled}}"
+    value: "{{splunk_web_enabled}}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
@@ -15,7 +14,6 @@
 - name: Set web.conf configs (settings.mgmtHostPort) 
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
     section: settings
     option: mgmtHostPort
     value: "0:{{splunkd_mgmt_port}}"
@@ -28,7 +26,6 @@
 - name: Set server.conf configs (general.serverName)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: general
     option: serverName
     value: "{{ splunk_role }}-{{ inventory_hostname }}"
@@ -41,7 +38,6 @@
 - name: Set server.conf configs (kvstore.disabled)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
     section: kvstore
     option: disabled
     value: "{{ splunk_kvstore_disabled }}"
@@ -51,39 +47,30 @@
   notify:
     - Restart Splunk
 
-- name: Set server.conf configs (general.serverName)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: general
-    option: serverName
-    value: "{{ splunk_role }}-{{ inventory_hostname }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set server.conf configs ([replication_port://9887])
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: replication_port://9887
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
 - name: Copy init script to init.d
-  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
+  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=755
   become: yes
 
 - name: Generate init symlinks
   command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
   become: yes
+  changed_when: false
 
 - name: Set init runlevels
   command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
   become: yes
+  changed_when: false
 
+- name: Configure license slave
+  command: "{{ splunk_home }}/bin/splunk edit licenser-localslave -master_uri '{{ splunk_lm_uri }}' -auth admin:{{ splunk_admin_pass }}"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  when: (splunk_lm_uri is defined)
+
+- name: re-read facts after adding custom fact
+  setup: filter=ansible_local
+  become: yes
+
+- include: upgrade-{{splunk_role}}.yml
+  when: ( splunk_version > ansible_local.splunk.idx.version )
+  become: yes

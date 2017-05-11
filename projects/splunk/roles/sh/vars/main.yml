@@ -1,5 +1,6 @@
 ---
-# splunk default vars
+# splunk sh
+splunk_version: 6.6.0
 splunk_role: sh
 splunk_web_enabled: 1
 splunk_kvstore_disabled: 0

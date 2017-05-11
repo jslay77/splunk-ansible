@@ -25,7 +25,7 @@
   become: yes
 
 - name: Checkout Latest Splunk bits from Git
-  git: repo={{ splunk_git_repo }} dest={{ splunk_home }} accept_hostkey=yes force=yes
+  git: repo={{ splunk_git_repo }} dest={{ splunk_home }} ssh_opts="-o StrictHostKeyChecking=no" force=yes
   become: yes
   become_user: "{{ splunk_user }}"
 

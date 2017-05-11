@@ -15,10 +15,6 @@
   lineinfile: dest=~/.ssh/authorized_keys line="{{ pubkey }}" state=present create=yes mode=0400
   become: yes
 
-- name: Update known_hosts
-  copy: src=known_hosts backup=yes mode=0600 dest=~/.ssh/known_hosts
-  become: yes
-
 - name: Update root priv key
   copy: src=id_rsa backup=yes mode=0400 dest=~/.ssh/id_rsa
   become: yes
@@ -44,7 +40,7 @@
   become: yes
 
 - name: Create and Chown shit.
-  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} state=directory
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} state=directory 
   become: yes
 
 - name: Update splunk user pub/auth keys 
@@ -55,6 +51,15 @@
   copy: src=id_rsa backup=yes mode=0400 dest="{{ splunk_root }}/.ssh/id_rsa" owner="{{ splunk_user }}" group="{{ splunk_group }}"
   become: yes
 
-- name: Update known_hosts for splunk account
-  copy: src=known_hosts backup=yes mode=0600 dest="{{ splunk_root }}/.ssh/known_hosts" owner="{{ splunk_user }}" group="{{ splunk_group }}"
+- name: Create directory for ansible custom facts
+  file: state=directory recurse=yes path=/etc/ansible/facts.d 
   become: yes
+
+- name: install custom splunk fact
+  copy: src=splunk.fact dest=/etc/ansible/facts.d mode=755
+  become: yes
+
+- name: re-read facts after adding custom fact
+  setup: filter=ansible_local
+  become: yes
+

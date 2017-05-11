@@ -1,0 +1,25 @@
+#!/usr/bin/env python
+
+import subprocess
+import re
+import json
+
+splunk_base = '/opt/splunk'
+
+p1 = subprocess.Popen(['find', splunk_base, '-name', 'splunk', '-type', 'f', '-executable'], stdout=subprocess.PIPE)
+output = p1.communicate()[0]
+splunks =  output.split();
+facts = {}
+for splunk in splunks:
+	f = {}
+	splunk_role = splunk.split('/', 4 )[3]
+	splunk_home = splunk_base + '/' + splunk_role
+	p1 = subprocess.Popen([splunk, '-version'], stdout=subprocess.PIPE)
+	o = p1.communicate()[0]
+	v = re.search('(?P<version>(\d+\.){2,}\d)\s', o).group('version')
+	f['splunk_home'] = splunk_home
+	f['splunk_role'] = splunk_role
+	f['version'] = v
+	facts[splunk_role] = f;
+
+print(json.dumps(facts))
