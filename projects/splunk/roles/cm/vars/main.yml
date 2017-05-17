@@ -2,7 +2,7 @@
 # splunk cm vars
 splunk_version: 6.6.0
 splunk_role: cm
-splunk_web_enabled: 0
+splunk_web_enabled: 1
 splunk_kvstore_disabled: 1
 splunk_home: /opt/splunk/cm
 splunk_root: /opt/splunk

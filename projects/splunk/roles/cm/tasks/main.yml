@@ -67,6 +67,32 @@
   notify:
     - Restart Splunk
 
+- name: Set server.conf configs (clustering.search_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: search_factor
+    value: "{{ splunk_sf }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.replication_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: replication_factor
+    value: "{{ splunk_rf }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
 - name: Set web.conf configs (settings.mgmtHostPort))
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
@@ -132,6 +158,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
+  changed_when: false
 
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local
