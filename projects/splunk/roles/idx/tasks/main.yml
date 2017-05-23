@@ -72,6 +72,9 @@
   setup: filter=ansible_local
   become: yes
 
-- include: upgrade-{{splunk_role}}.yml
+- include: upgrade.yml
   when: ( splunk_version > ansible_local.splunk.idx.version )
   become: yes
+
+- include: clustering.yml
+  when: ( splunk_cluster_member == true )

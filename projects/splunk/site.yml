@@ -18,13 +18,11 @@
   become: no
   roles:
   - idx
-  - idx_cluster_member
 
 - hosts: search_heads
   become: no
   roles:
   - sh
-  - idx_cluster_member
 
 - hosts: universal_forwarders
   become: no

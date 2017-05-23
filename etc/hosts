@@ -12,7 +12,22 @@
 
 [tag_utility_1]
 
+[tag_splunk_site_1]
+
+[tag_splunk_site_2]
+
+[tag_splunk_site_3]
+
 [utility:children]
+
+[site_1:children]
+tag_splunk_site_1
+
+[site_2:children]
+tag_splunk_site_2
+
+[site_3:children]
+tag_splunk_site_3
 
 [cluster_master:children]
 tag_splunk_cm_1
@@ -37,5 +52,11 @@ tag_splunk_cm_1
 tag_splunk_ds_1
 tag_splunk_sh_1
 tag_splunk_idx_1
+
+[jkscluster:children]
+tag_splunk_sh_1
+tag_splunk_idx_1
+tag_splunk_cm_1
+tag_splunk_ds_1
 
 

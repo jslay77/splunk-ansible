@@ -1,8 +1,3 @@
 ---
 dependencies:
-  - { role: enterprise, 
-      splunk_home: /opt/splunk/idx,
-      splunk_web_enabled: 0,
-      splunk_kvstore_disabled: 1,
-      splunk_role: idx
-     }
+  -  role: enterprise

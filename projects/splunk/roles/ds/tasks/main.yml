@@ -100,3 +100,6 @@
   when: (splunk_lm_uri is defined)
   changed_when: false
 
+- include: upgrade.yml
+  when: ( splunk_version > ansible_local.splunk.idx.version )
+  become: yes
