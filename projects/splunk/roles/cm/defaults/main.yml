@@ -18,8 +18,8 @@ splunk_rf: 2
 splunk_cluster_mode: master
 splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
 
-splunk_cluster_site: site1
 splunk_cluster_multisite: false
+splunk_cluster_site: site1
 splunk_site_replication_factor: origin:2,total:3
 splunk_site_search_factor: origin:2,total:3
 splunk_available_sites: site1,site2

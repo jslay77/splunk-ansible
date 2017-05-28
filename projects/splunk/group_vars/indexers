@@ -12,7 +12,7 @@ splunk_user: splunk
 splunk_group: splunk
 splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
 
-# splunk idx cluster (If cluster_member is true, clustering.yml is included)
+splunk_cluster_site: site1
 splunk_cluster_multisite: false
 splunk_cluster_member: true
 splunk_cluster_mode: slave

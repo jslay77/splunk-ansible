@@ -13,7 +13,7 @@ splunk_user: splunk
 splunk_group: splunk
 splunk_lm_uri: https://172.31.17.154:8089
 
-splunk_cluster_multisite: false
 splunk_cluster_site: site1
+splunk_cluster_multisite: false
 splunk_cluster_member: true
 splunk_cluster_mode: searchhead

@@ -67,6 +67,7 @@
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
   changed_when: false
+  ignore_errors: true
 
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local
@@ -76,8 +77,76 @@
   when: ( splunk_version > ansible_local.splunk.idx.version )
   become: yes
 
-- include: clustering.yml
-  when: ( splunk_cluster_member == true )
+- name: Set server.conf configs (clustering.pass4SymmKey)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: pass4SymmKey
+    value: "{{ splunk_cluster_key }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
 
-- include: multisite.yml
-  when: ( splunk_cluster_multisite == true )
+- name: Set server.conf configs (clustering.mode)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: mode
+    value: "{{ splunk_cluster_mode }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.cluster_label)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: cluster_label
+    value: "{{ splunk_cluster_label }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.master_uri)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: master_uri
+    value: "{{ splunk_cm_uri }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs ([replication_port://9887])
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: replication_port://9887
+    option: disabled
+    value: false
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (general.site)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: general
+    option: site
+    value: "{{ splunk_cluster_site }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
