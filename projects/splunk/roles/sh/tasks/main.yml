@@ -84,4 +84,6 @@
 
 - include: clustering.yml
   when: ( splunk_cluster_member == true )
-  
+ 
+- include: multisite.yml
+  when: ( splunk_cluster_multisite == true ) 

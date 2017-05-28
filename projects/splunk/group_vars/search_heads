@@ -14,5 +14,6 @@ splunk_group: splunk
 splunk_lm_uri: https://172.31.17.154:8089
 
 # clustering (if cluster_member is true, then clustering.yml is included)
+splunk_cluster_multisite: false
 splunk_cluster_member: true
 splunk_cluster_mode: searchhead

@@ -16,8 +16,6 @@
 
 [tag_splunk_site_2]
 
-[tag_splunk_site_3]
-
 [utility:children]
 
 [site_1:children]
@@ -25,9 +23,6 @@ tag_splunk_site_1
 
 [site_2:children]
 tag_splunk_site_2
-
-[site_3:children]
-tag_splunk_site_3
 
 [cluster_master:children]
 tag_splunk_cm_1
