@@ -1,4 +1,0 @@
----
-# Site vars
-splunk_cluster_site: site1
-splunk_cluster_multisite: true
