@@ -3,23 +3,6 @@
 #
 #
 
-- name: Check for existing splunk home"
-  stat: path="{{ splunk_home }}"
-  register: path
-  become: yes
-
-- name: Stop splunk if running
-  command: "{{ splunk_home }}/bin/splunk stop"
-  ignore_errors: True
-  become: yes
-  become_user: "{{ splunk_user }}"
-  when: path.stat.isdir is defined
-
-- name: Remove old dir
-  file: path={{ splunk_home }} state=absent
-  when: path.stat.isdir is defined
-  become: yes
-
 - name: Chmod and Chown shit.
   file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} 
   become: yes
@@ -28,45 +11,6 @@
   git: repo={{ splunk_git_repo }} dest={{ splunk_home }} ssh_opts="-o StrictHostKeyChecking=no" force=yes
   become: yes
   become_user: "{{ splunk_user }}"
-
-- name: Set server.conf configs
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
-    mode: 0650
-    section: kvstore
-    option: disabled
-    value: "{{ splunk_kvstore_disabled }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set web.conf configs (1)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
-    section: settings
-    option: mgmtHostPort
-    value: "0:{{splunkd_mgmt_port}}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set web.conf configs (2)
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
-    section: settings
-    option: startwebserver
-    value: "{{splunk_web_enabled}}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
 
 - name: Copy init script to init.d
   template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700

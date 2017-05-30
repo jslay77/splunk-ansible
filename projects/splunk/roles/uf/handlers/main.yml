@@ -1,13 +1,13 @@
 ---
 
 - name: Restart Splunk
-  command: "/etc/init.d/splunk-{{ splunk_role }} restart"
+  command: "/etc/init.d/splunk-{{ splunkforwarder_role }} restart"
   become: yes
 
 - name: Start Splunk
-  service: name="splunk-{{ splunk_role }}" state=started
+  service: name="splunk-{{ splunkforwarder_role }}" state=started
   become: yes
 
 - name: Stop Splunk
-  service: name="splunk-{{ splunk_role }}" state=stopped
+  service: name="splunk-{{ splunkforwarder_role }}" state=stopped
   become: yes

@@ -40,7 +40,7 @@
   become: yes
 
 - name: Create and Chown shit.
-  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} state=directory 
+  file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} state=directory recurse=true
   become: yes
 
 - name: Update splunk user pub/auth keys 

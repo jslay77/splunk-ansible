@@ -61,23 +61,10 @@
   notify:
     - Restart Splunk
 
-- name: Copy init script to init.d
-  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=755
-  become: yes
-
-- name: Generate init symlinks
-  command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
-  changed_when: False
-  become: yes
-
-- name: Enable splunk
-  service: name=splunk-{{ splunk_role }} enabled=yes
-  become: yes
-
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local
   become: yes
 
-- include: upgrade.yml-{{splunk_role}}
+- include: upgrade.yml
   when: ( splunk_version > ansible_local.splunk.sh.version )
   become: yes

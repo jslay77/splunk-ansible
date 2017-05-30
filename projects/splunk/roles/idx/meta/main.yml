@@ -6,3 +6,4 @@ dependencies:
       splunk_kvstore_disabled: 1,
       splunk_role: idx
      }
+     

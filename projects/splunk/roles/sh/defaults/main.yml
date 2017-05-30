@@ -1,0 +1,10 @@
+---
+# splunk sh
+splunk_version: 6.6.0
+splunk_role: sh
+splunk_web_enabled: 1
+splunk_kvstore_disabled: 0
+splunk_home: /opt/splunk/sh
+splunk_root: /opt/splunk
+splunkd_mgmt_port: 8089
+splunk_lm_uri: https://172.31.17.154:8089

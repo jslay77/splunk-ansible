@@ -4,13 +4,13 @@
 #
 
 - name: Check for existing UF repo.
-  stat: path="{{ splunk_home }}/.git"
+  stat: path="{{ splunkforwarder_home }}/.git"
   register: st
   ignore_errors: True
   become: true
 
 - name: Check if Splunk exists, but was never properly started (FTR still exists)
-  stat: path="{{ splunk_home }}/ftr"
+  stat: path="{{ splunkforwarder_home }}/ftr"
   register: ftr
   ignore_errors: True
   become: true
@@ -19,78 +19,78 @@
   when: ( st.stat.isdir is not defined or ftr.stat.islnk is defined )
 
 - name: Ensure SPLUNK_OS_USER is set
-  lineinfile: dest="{{ splunk_home }}/etc/splunk-launch.conf" 
+  lineinfile: dest="{{ splunkforwarder_home }}/etc/splunk-launch.conf" 
               state=present 
               regexp="^SPLUNK_OS_USER="
-              line="SPLUNK_OS_USER={{ splunk_user }}"
+              line="SPLUNK_OS_USER={{ splunkforwarder_user }}"
   become: true
   register: osuser
-  become_user: "{{ splunk_user }}"
+  become_user: "{{ splunkforwarder_user }}"
   notify:
     - Restart Splunk
 
 - name: Set web.conf configs (settings.mgmtHostPort)
   ini_file:
-    path: "{{ splunk_home }}/etc/system/local/web.conf" 
+    path: "{{ splunkforwarder_home }}/etc/system/local/web.conf" 
     mode: 0650
     section: settings
     option: mgmtHostPort
-    value: "0:{{splunkd_mgmt_port}}"
+    value: "0:{{splunkforwarder_mgmt_port}}"
     backup: yes
   become: yes
-  become_user: "{{ splunk_user }}"
+  become_user: "{{ splunkforwarder_user }}"
   notify:
     - Restart Splunk
 
 - name: Set server.conf configs (general.serverName)
   ini_file:
-    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    path: "{{ splunkforwarder_home }}/etc/system/local/server.conf" 
     mode: 0650
     section: general
     option: serverName
-    value: "{{ splunk_role }}-{{ inventory_hostname }}"
+    value: "{{ splunkforwarder_role }}-{{ inventory_hostname }}"
     backup: yes
   become: yes
-  become_user: "{{ splunk_user }}"
+  become_user: "{{ splunkforwarder_user }}"
   notify:
     - Restart Splunk
 
 - name: Set Deployment Client Configs (deployment-client.clientName)
   ini_file: 
-    path: "{{ splunk_home }}/etc/system/local/deploymentclient.conf"
+    path: "{{ splunkforwarder_home }}/etc/system/local/deploymentclient.conf"
     section: deployment-client
     option: clientName
-    value: "{{ splunk_clientName }}"
+    value: "{{ splunkforwarder_clientName }}"
     mode: 0650
     backup: yes
   become: yes
-  become_user: "{{ splunk_user }}"
+  become_user: "{{ splunkforwarder_user }}"
   notify:
     - Restart Splunk
 
 - name: Set Deployment Client Configs (target-broker:deploymentServer.targetUri)
   ini_file: 
-    path: "{{ splunk_home }}/etc/system/local/deploymentclient.conf"
+    path: "{{ splunkforwarder_home }}/etc/system/local/deploymentclient.conf"
     section: "target-broker:deploymentServer"
     option: targetUri
-    value: "{{ ds_uri }}"
+    value: "{{ splunkforwarder_ds_uri }}"
     mode: 0650
     backup: yes
   become: yes
-  become_user: "{{ splunk_user }}"
+  become_user: "{{ splunkforwarder_user }}"
   notify:
     - Restart Splunk
 
 - name: Ensure Splunk is started
-  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
+  service: name="splunk-{{ splunkforwarder_role }}" state=started enabled=yes
   become: yes
 
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local
   become: yes
 
-- include: upgrade-{{splunk_role}}.yml
-  when: ( splunk_version > ansible_local.splunk.uf.version )
+- include: upgrade.yml
+  when: ( splunkforwarder_version > ansible_local.splunk.uf.version )
   
 
 

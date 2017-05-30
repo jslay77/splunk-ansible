@@ -80,22 +80,10 @@
   notify:
     - Restart Splunk
 
-- name: Copy init script to init.d
-  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=755
-  become: yes
-
-- name: Generate init symlinks
-  command: "/sbin/chkconfig splunk-{{ splunk_role }} --add"
-  changed_when: false
-  become: yes
-
-- name: Set init runlevels
-  command: "/sbin/chkconfig splunk-{{ splunk_role }} on --level 235"
-  become: yes
-
 - name: Configure license slave
   command: "{{ splunk_home }}/bin/splunk edit licenser-localslave -master_uri '{{ splunk_lm_uri }}' -auth admin:{{ splunk_admin_pass }}"
   become: yes
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
+  ignore_errors: true
 

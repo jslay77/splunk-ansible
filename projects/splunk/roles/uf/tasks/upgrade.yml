@@ -1,0 +1,25 @@
+---
+# Install the UF (opt splunk should already exist) 
+
+- name: Stop Splunk
+  service: name="splunk-{{ splunkforwarder_role }}" state=stopped
+  become: yes
+
+- name: Checkout Latest Splunk from Git
+  git: repo={{ splunkforwarder_git_repo }} dest={{ splunkforwarder_home }} ssh_opts="-o StrictHostKeyChecking=no" force=yes
+  become: yes
+
+- name: Chmod and Chown shit.
+  file: dest={{ splunkforwarder_home }} owner={{ splunkforwarder_user }} group={{ splunkforwarder_group }} recurse=yes
+  become: yes
+
+- name: Ensure SPLUNK_OS_USER is set
+  lineinfile: dest="{{ splunkforwarder_home }}/etc/splunk-launch.conf"
+              state=present
+              line="SPLUNK_OS_USER={{ splunkforwarder_user }}"
+  become: true
+  become_user: "{{ splunkforwarder_user }}"
+
+- name: Start Splunk
+  service: name="splunk-{{ splunkforwarder_role }}" state=started
+  become: yes
