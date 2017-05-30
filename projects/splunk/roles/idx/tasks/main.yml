@@ -147,6 +147,7 @@
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
+  when: "{{ splunk_multisite |default(false) }} == true"
   notify:
     - Restart Splunk
 
