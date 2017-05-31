@@ -1,4 +1,27 @@
 ---
+- name: Set inputs.conf configs (splunktcp://9997.connection_host)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/inputs.conf" 
+    section: 'splunktcp://9997'
+    option: connection_host
+    value: ip
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set inputs.conf configs ([splunktcp://9997].connection_host)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/inputs.conf" 
+    section: '[splunktcp://9997]'
+    state: absent
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
 - name: Set web.conf configs (settings.startwebserver)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/web.conf" 
@@ -61,3 +84,9 @@
 - include: upgrade.yml
   when: ( splunk_version > ansible_local.splunk.idx.version )
   become: yes
+
+- include: multisite.yml
+  when: ( splunk_idx_clustering_multisite == true )
+
+- include: idx_clustering.yml
+  when: ( splunk_idx_clustering == true )

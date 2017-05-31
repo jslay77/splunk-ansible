@@ -7,6 +7,7 @@ splunk_kvstore_disabled: 1
 splunk_home: /opt/splunk/cm
 splunk_root: /opt/splunk
 splunkd_mgmt_port: 18089
+splunk_admin_pass: '@thL0n64'
 splunk_cluster_key: jksclusterkey
 splunk_cluster_label: jkscluster
 splunk_sf: 2

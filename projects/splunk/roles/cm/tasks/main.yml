@@ -125,3 +125,6 @@
 
 - include: upgrade.yml
   when: ( splunk_version > ansible_local.splunk.cm.version )
+
+- include: multisite.yml
+  when: ( splunk_cluster_multisite == true )

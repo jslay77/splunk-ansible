@@ -10,3 +10,11 @@ splunkd_mgmt_port: 8089
 splunk_user: splunk
 splunk_group: splunk
 splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
+
+# Switch splunk_idx_clustering to false to disable indexer clustering.  Note: currently not able to rollback once set....will work on that
+splunk_idx_clustering: true
+splunk_idx_clustering_multisite: fales
+splunk_idx_clustering_mode: slave
+splunk_idx_clustering_label: jkscluster
+splunk_cm_uri: https://172.31.10.234:18089
+splunk_idx_clustering_key: jksclusterkey

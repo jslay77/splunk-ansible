@@ -1,9 +1,0 @@
----
-# splunk idx vars
-splunk_home: /opt/splunk/idx
-splunk_user: splunk
-splunk_group: splunk
-splunk_cluster_key: jksclusterkey
-splunk_cluster_mode: slave
-splunk_cluster_label: jkscluster
-splunk_cm_uri: https://172.31.10.234:18089
