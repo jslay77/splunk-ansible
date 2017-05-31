@@ -12,3 +12,5 @@ splunk_admin_pass: '@thL0n64'
 splunk_user: splunk
 splunk_group: splunk
 splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
+splunk_idx_clustering: false
+splunk_idx_clustering_multisite: false

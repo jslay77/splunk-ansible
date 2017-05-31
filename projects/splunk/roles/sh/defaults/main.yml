@@ -8,3 +8,6 @@ splunk_home: /opt/splunk/sh
 splunk_root: /opt/splunk
 splunkd_mgmt_port: 8089
 splunk_lm_uri: https://172.31.17.154:8089
+splunk_sh_clustering: false
+splunk_idx_clustering: false
+splunk_idx_clustering_multisite: false
