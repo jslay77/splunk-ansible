@@ -28,13 +28,39 @@
   notify:
     - Restart Splunk
 
+- name: Set server.conf configs (clustering.replication_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: replication_factor
+    value: "{{ splunk_idx_clustering_replication_factor }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.search_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    mode: 0650
+    section: clustering
+    option: search_factor
+    value: "{{ splunk_idx_clustering_search_factor }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
 - name: Set server.conf configs (clustering.mode)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
     mode: 0650
     section: clustering
     option: mode
-    value: "{{ splunk_cluster_mode }}"
+    value: "{{ splunk_idx_clustering_mode }}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
@@ -47,7 +73,7 @@
     mode: 0650
     section: clustering
     option: pass4SymmKey
-    value: "{{ splunk_cluster_key }}"
+    value: "{{ splunk_idx_clustering_key }}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
@@ -60,7 +86,7 @@
     mode: 0650
     section: clustering
     option: cluster_label
-    value: "{{ splunk_cluster_label }}"
+    value: "{{ splunk_idx_clustering_label }}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
@@ -127,4 +153,4 @@
   when: ( splunk_version > ansible_local.splunk.cm.version )
 
 - include: multisite.yml
-  when: ( splunk_cluster_multisite == true )
+  when: ( splunk_idx_clustering_multisite == true )

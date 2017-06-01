@@ -1,1 +1,13 @@
 ---
+- name: Set server.conf configs (general.site)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: general
+    option: site
+    value: "{{ splunk_idx_clustering_site }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+

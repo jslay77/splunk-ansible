@@ -1,1 +1,60 @@
 ---
+- name: Set server.conf configs (general.site)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: general
+    option: site
+    value: "{{ splunk_idx_clustering_site }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.multisite)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: multisite
+    value: "{{ splunk_idx_clustering_multisite }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.available_sites)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: available_sites
+    value: "{{ splunk_idx_clustering_available_sites }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.site_replication_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: site_replication_factor
+    value: "{{ splunk_idx_clustering_site_replication_factor }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
+
+- name: Set server.conf configs (clustering.site_search_factor)
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf" 
+    section: clustering
+    option: site_search_factor
+    value: "{{ splunk_idx_clustering_site_search_factor }}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk

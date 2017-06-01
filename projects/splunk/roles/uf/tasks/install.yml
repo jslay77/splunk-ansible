@@ -69,7 +69,7 @@
     path: "{{ splunkforwarder_home }}/etc/system/local/deploymentclient.conf"
     section: "target-broker:deploymentServer"
     option: targetUri
-    value: "{{ ds_uri }}"
+    value: "{{ splunkforwarder_ds_uri }}"
     mode: 0650
     backup: yes
   become: yes

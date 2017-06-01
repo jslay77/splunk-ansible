@@ -13,7 +13,7 @@ RETVAL=0
 
 splunk_start() {
   echo Starting Splunk...
-  "{{ splunkforwarder_home }}/bin/splunk" start --no-prompt --answer-yes --accept-license
+  "{{ splunkforwarder_home }}/bin/splunk" start --answer-yes --accept-license
   RETVAL=$?
   [ $RETVAL -eq 0 ] && touch /var/lock/subsys/splunk-{{ splunkforwarder_role }}
 }

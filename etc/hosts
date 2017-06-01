@@ -12,6 +12,10 @@
 
 [tag_utility_1]
 
+[tag_splunk_site_1]
+
+[tag_splunk_site_2]
+
 [utility:children]
 
 [cluster_master:children]
@@ -22,6 +26,12 @@ tag_splunk_sh_1
 
 [indexers:children]
 tag_splunk_idx_1
+
+[site1:children]
+tag_splunk_site_1
+
+[site2:children]
+tag_splunk_site_2
 
 [deployment_servers:children]
 tag_splunk_ds_1

@@ -83,3 +83,8 @@
   when: ( splunk_idx_clustering == true )
   become: yes
 
+- include: multisite.yml
+  when: ( splunk_idx_clustering_multisite == true )
+  become: yes
+
+

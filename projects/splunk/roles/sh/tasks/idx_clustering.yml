@@ -6,7 +6,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   ignore_errors: true
-  when: ( splunk_idx_clustering = true )
+  when: ( splunk_idx_clustering == true )
 
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
