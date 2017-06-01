@@ -3,6 +3,7 @@
 # Use Group vars to override
 
 pubkey: "Apublicsshkey"
+privkey: "Aprivkey..."
 splunk_uid: "77777"
 splunk_gid: "77777"
 splunk_user: "splunk"

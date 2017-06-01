@@ -6,7 +6,7 @@ splunkforwarder_role: uf
 splunkforwarder_home: /opt/splunk/uf
 splunkforwarder_root: /opt/splunk
 splunkforwarder_mgmt_port: 58089
-splunkforwarder_git_repo: 'ssh://myuser@mygitbox.mydomain.com
+splunkforwarder_git_repo: 'ssh://myuser@mygitbox.mydomain.com'
 splunkforwarder_admin_pass: myadminpass
 splunkforwarder_user: splunk
 splunkforwarder_group: splunk

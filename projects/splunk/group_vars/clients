@@ -6,13 +6,9 @@ splunkforwarder_home: /opt/splunk/uf
 splunkforwarder_root: /opt/splunk
 splunkd_mgmt_port: 58089
 splunkforwarder_git_repo: 'ssh://jslay@127.0.0.1:2222/Users/jslay/Projects/splunk/uf/linux/splunkforwarder'
-splunkforwarder_admin_pass: !vault |
-	$ANSIBLE_VAULT;1.1;AES256
-	64663964663132616137663834643832356236653838323935316435623262356564383338303766
-	3930346163643731666639333764363639666363333663310a616362383038663461323832656239
-	33626562383033313737346566613239343635353737336530363961303566626439316338633938
-	3936313662643038310a383838383138333937353161366431343335633437353838646438313131
-	6662
 splunkforwarder_user: splunk
 splunkforwarder_group: splunk
 splunkforwarder_clientName: uf
+
+# Moved these to the all group vars file 
+# splunkforwarder_admin_pass:
