@@ -8,14 +8,14 @@ splunk_home: /opt/splunk/cm
 splunk_root: /opt/splunk
 splunkd_mgmt_port: 18089
 splunk_idx_clustering_label: jkscluster
-splunk_idx_clustering_replication_factor: 2
-splunk_idx_clustering_search_factor: 1
+splunk_idx_clustering_replication_factor: 8
+splunk_idx_clustering_search_factor: 6
 splunk_cluster_mode: master
 splunk_lm_uri: https://ip-172-31-33-197.ec2.internal:8089
 splunk_idx_clustering_multisite: true
 splunk_idx_clustering_available_sites: site1,site2
-splunk_idx_clustering_site_replication_factor: origin:1,total:2
-splunk_idx_clustering_site_search_factor: origin:1,total:2
+splunk_idx_clustering_site_replication_factor: origin:6,total:12
+splunk_idx_clustering_site_search_factor: origin:6,total:12
 
 # Moved these to the all group vars file 
 # splunk_admin_pass:
