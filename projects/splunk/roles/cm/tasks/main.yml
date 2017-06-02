@@ -72,6 +72,7 @@
   register: keyCheck
   become: true
   become_user: "{{ splunk_user }}"
+  changed_when: false
 
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
@@ -137,6 +138,7 @@
   command: "{{ splunk_home }}/bin/splunk apply cluster-bundle --answer-yes -auth admin:{{ splunk_admin_pass }}"
   become: yes
   become_user: "{{ splunk_user }}"
+  changed_when: false
 
 - name: Add outputs.conf
   template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=660
@@ -151,6 +153,7 @@
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
   ignore_errors: true
+  changed_when: false
 
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local

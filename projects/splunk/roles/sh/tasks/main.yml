@@ -78,6 +78,7 @@
   become_user: "{{ splunk_user }}"
   ignore_errors: true
   when: ( splunk_idx_clustering != true )
+  changed_when: false
 
 - include: idx_clustering.yml
   when: ( splunk_idx_clustering == true )

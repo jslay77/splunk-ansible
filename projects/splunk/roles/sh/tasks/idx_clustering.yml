@@ -3,6 +3,7 @@
   register: keyCheck
   become: true
   become_user: "{{ splunk_user }}"
+  changed_when: false
 
 - name: Add search peers (cluster master & DS)
   command: "{{ splunk_home }}/bin/splunk add search-server https://{{ hostvars[item].ec2_private_dns_name }}:8089 -auth admin:{{ splunk_admin_pass }} -remoteUsername admin -remotePassword {{ splunk_admin_pass }}"
@@ -13,6 +14,7 @@
   become_user: "{{ splunk_user }}"
   ignore_errors: true
   when: ( splunk_idx_clustering == true )
+  changed_when: false
 
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
