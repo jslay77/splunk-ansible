@@ -6,7 +6,7 @@ splunk_web_enabled: 0
 splunk_kvstore_disabled: 1
 splunk_home: /opt/splunk/cm
 splunk_root: /opt/splunk
-splunkd_mgmt_port: 18089
+splunkd_mgmt_port: 8089
 splunk_idx_clustering_key: myclusterpassword
 splunk_idx_clustering_label: mycluster 
 splunk_idx_clustering_replication_factor: 2

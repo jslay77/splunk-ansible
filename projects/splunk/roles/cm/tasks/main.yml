@@ -85,6 +85,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   when: keyCheck.stdout.find('pass4SymmKey') == -1
+  no_log: true
   notify:
     - Restart Splunk
 
@@ -95,19 +96,6 @@
     section: clustering
     option: cluster_label
     value: "{{ splunk_idx_clustering_label }}"
-    backup: yes
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
-- name: Set web.conf configs (settings.mgmtHostPort))
-  ini_file:
-    path: "{{ splunk_home }}/etc/system/local/web.conf" 
-    mode: 0650
-    section: settings
-    option: mgmtHostPort
-    value: "0:{{splunkd_mgmt_port}}"
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
@@ -139,6 +127,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   changed_when: false
+  no_log: true
 
 - name: Add outputs.conf
   template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=660
@@ -154,6 +143,20 @@
   when: (splunk_lm_uri is defined)
   ignore_errors: true
   changed_when: false
+  no_log: true
+
+- name: Set web.conf configs (settings.mgmtHostPort))
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/web.conf" 
+    mode: 0650
+    section: settings
+    option: mgmtHostPort
+    value: "0:{{splunkd_mgmt_port}}"
+    backup: yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  notify:
+    - Restart Splunk
 
 - name: re-read facts after adding custom fact
   setup: filter=ansible_local

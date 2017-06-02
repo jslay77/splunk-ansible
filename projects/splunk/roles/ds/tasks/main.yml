@@ -86,4 +86,5 @@
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
   ignore_errors: true
+  no_log: true
 

@@ -15,6 +15,7 @@
   ignore_errors: true
   when: ( splunk_idx_clustering == true )
   changed_when: false
+  no_log: true
 
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
@@ -26,6 +27,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   when: keyCheck.stdout.find('pass4SymmKey') == -1
+  no_log: true
   notify:
     - Restart Splunk
 

@@ -15,6 +15,7 @@
   become: yes
   become_user: "{{ splunk_user }}"
   when: keyCheck.stdout.find('pass4SymmKey') == -1
+  no_log: true
   notify:
     - Restart Splunk
 
