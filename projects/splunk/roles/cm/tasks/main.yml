@@ -84,7 +84,7 @@
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
-  when: keyCheck.stdout.find('pass4SymmKey') == -1
+  #when: keyCheck.stdout.find('pass4SymmKey') == -1
   no_log: true
   notify:
     - Restart Splunk
@@ -130,20 +130,22 @@
   no_log: true
 
 - name: Add outputs.conf
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=660
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=0660
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
     - Restart Splunk
 
 - name: Configure license slave
-  command: "{{ splunk_home }}/bin/splunk edit licenser-localslave -master_uri '{{ splunk_lm_uri }}' -auth admin:{{ splunk_admin_pass }}"
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf"
+    section: license
+    option: master_uri
+    value: "{{ splunk_lm_uri }}"
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
-  ignore_errors: true
-  changed_when: false
-  no_log: true
 
 - name: Set web.conf configs (settings.mgmtHostPort))
   ini_file:

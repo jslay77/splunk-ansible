@@ -24,6 +24,7 @@
     backup: yes 
     dest: ~/.ssh/id_rsa
     content: "{{ privkey }}"
+    mode: 0600
   no_log: true
   become: yes
 
@@ -57,6 +58,7 @@
     backup: yes 
     dest: ~/.ssh/id_rsa
     content: "{{ privkey }}"
+    mode: 0600
   no_log: true
   become: yes
   become_user: "{{ splunk_user }}"

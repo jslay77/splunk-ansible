@@ -5,7 +5,7 @@
   become_user: "{{ splunk_user }}"
 
 - name: Add outputs.conf
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/deployment-apps/jks_outputs/local/outputs.conf" mode=650
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/deployment-apps/jks_outputs/local/outputs.conf" mode=0650
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
@@ -26,7 +26,7 @@
     - Restart Splunk
 
 - name: Copy outputs.conf for splunk
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=650
+  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=0650
   become: yes
   become_user: "{{ splunk_user }}"
   notify:
@@ -81,10 +81,12 @@
     - Restart Splunk
 
 - name: Configure license slave
-  command: "{{ splunk_home }}/bin/splunk edit licenser-localslave -master_uri '{{ splunk_lm_uri }}' -auth admin:{{ splunk_admin_pass }}"
+  ini_file:
+    path: "{{ splunk_home }}/etc/system/local/server.conf"
+    section: license
+    option: master_uri
+    value: "{{ splunk_lm_uri }}"
+    backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
-  ignore_errors: true
-  no_log: true
-

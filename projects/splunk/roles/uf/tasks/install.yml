@@ -31,7 +31,7 @@
     mode: 0650
     section: settings
     option: mgmtHostPort
-    value: "0:{{splunkd_mgmt_port}}"
+    value: "0:{{splunkforwarder_mgmt_port}}"
     backup: yes
   become: yes
   become_user: "{{ splunkforwarder_user }}"
