@@ -86,3 +86,29 @@
   service: name=rc-local state=started enabled=yes
   become: yes
 
+- name: Set limits (data)
+  become: yes
+  pam_limits:
+    domain:  "{{ splunk_user }}" 
+    limit_type: '-'
+    limit_item: data
+    value: 1024000
+    use_max: yes
+
+- name: Set limits (nofile)
+  become: yes
+  pam_limits:
+    domain:  "{{ splunk_user }}" 
+    limit_type: soft
+    limit_item: nofile
+    value: 99999
+    use_max: yes
+
+- name: Set limits (nproc)
+  become: yes
+  pam_limits:
+    domain:  "{{ splunk_user }}" 
+    limit_type: '-'
+    limit_item: nproc
+    value: 999999
+    use_max: yes
