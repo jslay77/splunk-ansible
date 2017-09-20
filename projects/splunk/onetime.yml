@@ -1,0 +1,12 @@
+---
+- hosts: onetime
+  become: yes
+  roles:
+    - common
+
+- hosts: onetime
+  become: no
+  roles:
+  - uf
+
+

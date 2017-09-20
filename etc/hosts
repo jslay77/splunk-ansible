@@ -37,7 +37,6 @@ tag_splunk_site_2
 tag_splunk_ds_1
 
 [clients:children]
-tag_splunk_ufonly_1
 tag_splunk_uf_1 
 
 [enterprise:children]
@@ -46,4 +45,6 @@ tag_splunk_ds_1
 tag_splunk_sh_1
 tag_splunk_idx_1
 
+[onetime:children]
+tag_splunk_ufonly_1
 

@@ -1,6 +1,6 @@
 ---
 # splunk ds vars
-splunk_version: 6.6.0
+splunk_version: 6.6.2
 splunk_role: ds
 splunk_web_enabled: 0
 splunk_kvstore_disabled: 1

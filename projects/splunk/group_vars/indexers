@@ -1,6 +1,6 @@
 ---
 # splunk idx vars
-splunk_version: 6.6.1
+splunk_version: 6.6.3
 splunk_role: idx
 splunk_web_enabled: 0
 splunk_kvstore_disabled: 1
