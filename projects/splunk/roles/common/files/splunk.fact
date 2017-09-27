@@ -14,7 +14,7 @@ for splunk in splunks:
 	f = {}
 	splunk_role = splunk.split('/', 4 )[3]
 	splunk_home = splunk_base + '/' + splunk_role
-	p1 = subprocess.Popen([splunk, '-version'], stdout=subprocess.PIPE)
+	p1 = subprocess.Popen([splunk, '-version' '--answer-yes'], stdout=subprocess.PIPE)
 	o = p1.communicate()[0]
 	v = re.search('(?P<version>(\d+\.){2,}\d)\s', o).group('version')
 	f['splunk_home'] = splunk_home

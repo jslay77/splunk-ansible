@@ -92,7 +92,7 @@
     domain:  "{{ splunk_user }}" 
     limit_type: '-'
     limit_item: data
-    value: 1024000
+    value: 99999999
     use_max: yes
 
 - name: Set limits (nofile)
