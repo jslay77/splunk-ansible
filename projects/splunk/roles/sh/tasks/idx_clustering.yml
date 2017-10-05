@@ -5,18 +5,6 @@
   become_user: "{{ splunk_user }}"
   changed_when: false
 
-- name: Add search peers (cluster master & DS)
-  command: "{{ splunk_home }}/bin/splunk add search-server https://{{ hostvars[item].ec2_private_dns_name }}:8089 -auth admin:{{ splunk_admin_pass }} -remoteUsername admin -remotePassword {{ splunk_admin_pass }}"
-  with_items:
-    - "{{ groups['cluster_master'] }}"
-    - "{{ groups['deployment_servers'] }}"
-  become: yes
-  become_user: "{{ splunk_user }}"
-  ignore_errors: true
-  when: ( splunk_idx_clustering == true )
-  changed_when: false
-  no_log: true
-
 - name: Set server.conf configs (clustering.pass4SymmKey)
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf" 
@@ -26,7 +14,7 @@
     backup: yes
   become: yes
   become_user: "{{ splunk_user }}"
-#  when: keyCheck.stdout.find('pass4SymmKey') == -1
+  when: keyCheck.stdout.find('pass4SymmKey') == -1
   no_log: true
   notify:
     - Restart Splunk

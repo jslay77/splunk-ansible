@@ -13,9 +13,19 @@
     accept_hostkey: yes
   become: yes
   notify:
-    - Install collectd service
     - Enable collectd
     - Restart collectd
+
+- name: Install collectd service
+  copy:
+    src: "{{ collectd_home }}/contrib/collectd.service"
+    remote_src: no
+    dest: "/etc/systemd/system/collectd.service"
+    mode: 644
+  become: yes
+  register: collectd_update
+  notify:
+    - Reload systemd
 
 - name: Chown shit
   file: 
@@ -30,3 +40,4 @@
     name: collectd
     state: started
   become: yes
+  when: collectd_update.changed

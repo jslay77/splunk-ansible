@@ -81,16 +81,8 @@
   become_user: "{{ splunk_user }}"
   when: (splunk_lm_uri is defined)
 
-- name: re-read facts after adding custom fact
-  setup: filter=ansible_local
-  become: yes
-
-- include: upgrade.yml
-  when: ( splunk_version > ansible_local.splunk.idx.version )
-  become: yes
-
-- include: multisite.yml
+- include_tasks: multisite.yml
   when: ( splunk_idx_clustering_multisite == true )
 
-- include: idx_clustering.yml
+- include_tasks: idx_clustering.yml
   when: ( splunk_idx_clustering == true )

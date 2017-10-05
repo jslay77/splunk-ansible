@@ -1,14 +1,4 @@
 ---
-- name: Install collectd service
-  copy:
-    src: "{{ collectd_home }}/contrib/collectd.service"
-    remote_src: no
-    dest: "/etc/systemd/system/collectd.service"
-    mode: 644
-  become: yes
-  notify:
-    - Reload systemd
-
 - name: Reload systemd
   systemd: daemon_reload=yes
   become: yes
@@ -29,12 +19,12 @@
 - name: Restart collectd
   systemd:
     name: collectd
-    state: reloaded
+    state: restarted
   become: yes
 
 - name: Stop collectd
   systemd:
     name: collectd
-    state: reloaded
+    state: stopped
   become: yes
 

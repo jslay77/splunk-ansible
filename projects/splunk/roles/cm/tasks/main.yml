@@ -143,8 +143,5 @@
   setup: filter=ansible_local
   become: yes
 
-- import_tasks: upgrade.yml
-  when: ( splunk_version > ansible_local.splunk.cm.version )
-
-- import_tasks: multisite.yml
+- include_tasks: multisite.yml
   when: ( splunk_idx_clustering_multisite == true )
