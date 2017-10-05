@@ -11,12 +11,14 @@
 
 - name: Reload systemd
   systemd: daemon_reload=yes
+  become: yes
 
 - name: Enable collectd
   systemd:
     name: collectd
     enabled: yes
     masked: no
+  become: yes
 
 - name: Start collectd
   systemd:

@@ -3,23 +3,25 @@
 #
 #
 
-- name: Check for existing splunk home
-  stat: path="{{ splunk_home }}"
-  register: st
-  ignore_errors: true
-  become: true
-
-- name: Check if Splunk exists, but was never properly started (FTR still exists)
-  stat: path="{{ splunk_home }}/ftr"
-  register: ftr
-  ignore_errors: True
-  become: true
-
-- include: install.yml
-  when: ( st.stat.isdir is not defined or ftr.stat.islnk is defined )
-
 - name: Chmod and Chown shit.
   file: dest={{ splunk_root }} owner={{ splunk_user }} group={{ splunk_group }} 
+  become: yes
+
+- name: Checkout Latest Splunk bits from Git
+  git: repo={{ splunk_git_repo }} dest={{ splunk_home }} ssh_opts="-o StrictHostKeyChecking=no" update=yes accept_hostkey=yes force=yes
+  become: yes
+  become_user: "{{ splunk_user }}"
+  register: checkout
+  changed_when: "(checkout.before != checkout.after)"
+  notify:
+    - Set admin password
+
+- name: Copy init script to init.d
+  template: src=splunk_init dest="/etc/init.d/splunk-{{ splunk_role }}" mode=700
+  become: yes
+
+- name: Ensure Splunk is started
+  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
   become: yes
 
 - name: Ensure SPLUNK_OS_USER is set
@@ -29,10 +31,6 @@
   become: true
   become_user: "{{ splunk_user }}"
  
-- name: Ensure Splunk is started
-  service: name="splunk-{{ splunk_role }}" state=started enabled=yes
-  become: yes
-
 - name: Disable THP (tuned)
   service: name=tuned enabled=no state=stopped
   become: yes

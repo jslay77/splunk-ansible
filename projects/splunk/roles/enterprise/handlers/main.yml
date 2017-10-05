@@ -1,0 +1,8 @@
+---
+# Handlers for splunk 
+
+- name: Set admin password (if its default)
+  command: "{{ splunk_home }}/bin/splunk edit user admin -password {{ splunk_admin_pass }} -auth admin:changeme --answer-yes --accept-license"
+  become: yes
+  become_user: "{{ splunk_user }}"
+  ignore_errors: true

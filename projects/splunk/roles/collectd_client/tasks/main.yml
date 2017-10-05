@@ -12,7 +12,6 @@
     update: yes
     accept_hostkey: yes
   become: yes
-  become_user: "{{ collectd_user }}"
   notify:
     - Install collectd service
     - Enable collectd
@@ -24,4 +23,10 @@
     owner: "{{ splunk_user }}"
     group: "{{ splunk_group }}" 
     recurse: yes
+  become: yes
+
+- name: Start collectd
+  systemd:
+    name: collectd
+    state: started
   become: yes
