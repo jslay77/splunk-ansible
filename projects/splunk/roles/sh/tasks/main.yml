@@ -47,13 +47,6 @@
   notify:
     - Restart Splunk
 
-- name: Copy outputs.conf for splunk 
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" 
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
 - name: Copy limits.conf for splunk 
   copy: src=limits.conf dest="{{ splunk_home }}/etc/system/local/limits.conf" 
   become: yes

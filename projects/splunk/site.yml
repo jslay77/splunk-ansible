@@ -28,5 +28,4 @@
   become: no
   roles:
   - uf
-
-
+  - collectd_client

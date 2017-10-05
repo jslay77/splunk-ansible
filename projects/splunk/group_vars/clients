@@ -12,3 +12,10 @@ splunkforwarder_clientName: uf
 
 # Moved these to the all group vars file 
 # splunkforwarder_admin_pass:
+
+# Collectd vars
+#collectd_write_http: In git repo config
+collectd_home: /opt/collectd
+collectd_git_repo: 'ssh://ip-172-31-37-123.ec2.internal/opt/repos/collectd'
+collectd_user: splunk
+collectd_group: splunk

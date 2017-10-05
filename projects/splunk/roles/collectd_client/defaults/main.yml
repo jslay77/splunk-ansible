@@ -1,0 +1,7 @@
+---
+# Collectd vars
+collectd_write_http: https://myHECEndpoint:8088/services/collector/raw
+collectd_home: /opt/collectd
+collectd_git_repo: 'ssh://myuser@mygitbox.mydomain.com'
+collectd_user: splunk
+collectd_group: splunk

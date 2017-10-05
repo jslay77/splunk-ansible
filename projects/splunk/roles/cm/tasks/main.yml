@@ -129,13 +129,6 @@
   changed_when: false
   no_log: true
 
-- name: Add outputs.conf
-  template: src=outputs.conf dest="{{ splunk_home }}/etc/system/local/outputs.conf" mode=0660
-  become: yes
-  become_user: "{{ splunk_user }}"
-  notify:
-    - Restart Splunk
-
 - name: Configure license slave
   ini_file:
     path: "{{ splunk_home }}/etc/system/local/server.conf"

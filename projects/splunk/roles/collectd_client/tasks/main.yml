@@ -1,0 +1,27 @@
+---
+# Install the collectd agent
+#
+#
+
+- name: Checkout Latest collectd Git Repo
+  git: 
+    repo: "{{ collectd_git_repo }}"
+    dest: "{{ collectd_home }}" 
+    ssh_opts: "-o StrictHostKeyChecking=no" 
+    force: yes
+    update: yes
+    accept_hostkey: yes
+  become: yes
+  become_user: "{{ collectd_user }}"
+  notify:
+    - Install collectd service
+    - Enable collectd
+    - Restart collectd
+
+- name: Chown shit
+  file: 
+    dest: "{{ collectd_home }}"
+    owner: "{{ splunk_user }}"
+    group: "{{ splunk_group }}" 
+    recurse: yes
+  become: yes
