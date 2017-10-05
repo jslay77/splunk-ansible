@@ -29,3 +29,8 @@
   roles:
   - uf
   - collectd_client
+
+- hosts: 127.0.0.1
+  become: yes
+  roles:
+    - collectd_client

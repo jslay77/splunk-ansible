@@ -3,6 +3,7 @@
 # Encrypted shit that would be sensitive in a real prod environment using ansible-vault
 
 splunk_git_repo: 'ssh://splunk@ip-172-31-37-123.ec2.internal/opt/repos/splunk'
+collectd_git_repo: 'ssh://splunk@ip-172-31-37-123.ec2.internal/opt/repos/collectd'
 
 splunk_admin_pass: !vault |
   $ANSIBLE_VAULT;1.1;AES256

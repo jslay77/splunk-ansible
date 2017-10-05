@@ -1,6 +1,6 @@
 ---
 # splunk cm vars
-splunk_version: 7.7.0
+splunk_version: 7.0.0
 splunk_role: cm
 splunk_web_enabled: 1
 splunk_kvstore_disabled: 0

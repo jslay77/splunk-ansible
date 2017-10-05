@@ -1,5 +1,5 @@
 ---
-splunkforwarder_version: 6.6.3
+splunkforwarder_version: 7.0.0
 splunkforwarder_ds_uri: ip-172-31-7-21.ec2.internal:8089
 splunkforwarder_role: uf
 splunkforwarder_home: /opt/splunk/uf
